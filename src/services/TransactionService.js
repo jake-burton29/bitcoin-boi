@@ -29,7 +29,7 @@ export class TransactionService {
    */  
     async getTransactionsByDateRange(startDate, endDate, limit = 25, offset = 0) {
         try {
-            const response = await fetch(`/api/transactions-range?start=${encodeURIComponent(startDate)}&end=${encodeURIComponent(endDate)}&limit=${limit}&offset=${offset}`);
+            const response = await fetch(`/api/transactions/range?start=${encodeURIComponent(startDate)}&end=${encodeURIComponent(endDate)}&limit=${limit}&offset=${offset}`);
             
             if (!response.ok) {
                 throw new Error(await this.handleResponseError(response));

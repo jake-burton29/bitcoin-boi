@@ -1,5 +1,9 @@
 <script>
     import { onMount } from 'svelte';
+    import { TransactionService } from './services/TransactionService';
+    
+    // Create transaction service instance
+    const transactionService = new TransactionService();
     
     // State variables
     let transactions = [];
@@ -34,24 +38,16 @@
       try {
         console.log("Fetching transactions...");
         const offset = currentPage * pageSize;
-        let url = '';
+        let data;
         
         if (searchTerm) {
-          url = `/api/search-transactions?term=${encodeURIComponent(searchTerm)}&limit=${pageSize}`;
+          data = await transactionService.searchTransactions(searchTerm, pageSize, offset);
         } else if (startTime && endTime) {
-          url = `/api/transactions-range?start=${encodeURIComponent(startTime)}&end=${encodeURIComponent(endTime)}&limit=${pageSize}&offset=${offset}`;
+          data = await transactionService.getTransactionsByDateRange(startTime, endTime, pageSize, offset);
         } else {
-          url = `/api/transactions?limit=${pageSize}&offset=${offset}`;
+          data = await transactionService.getTransactions(pageSize, offset);
         }
         
-        console.log("Fetch URL:", url);
-        const response = await fetch(url);
-        
-        if (!response.ok) {
-          throw new Error(`API error: ${response.status}`);
-        }
-        
-        const data = await response.json();
         console.log("Transactions data:", data);
         transactions = data.rows || [];
         totalCount = data.totalCount || 0;
@@ -113,14 +109,8 @@
         startTime = startIso.substring(0, 10);
         endTime = endIso.substring(0, 10);
         
-        const url = `/api/transactions-by-time?interval=${encodeURIComponent(timeInterval)}&limit=50`;
-        const response = await fetch(url);
-        
-        if (!response.ok) {
-          throw new Error(`API error: ${response.status}`);
-        }
-        
-        const data = await response.json();
+        // Use the service instead of direct fetch
+        const data = await transactionService.getTransactionsByTime(timeInterval, 50);
         timeSeriesData = data;
       } catch (err) {
         console.error('Error fetching time series data:', err);
