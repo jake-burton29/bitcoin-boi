@@ -29,7 +29,7 @@ const limiter = rateLimit({
   max: 100, // limit each IP to 100 requests per windowMs
   standardHeaders: true,
   legacyHeaders: false,
-  message: "Too many requests from this IP, please try again later."
+  message: "Too many requests, please try again later."
 });
 
 app.use('/api/', limiter);

@@ -24,7 +24,8 @@
     "morgan": "^1.10.0",
     "pg": "^8.14.0",
     "pg-hstore": "^2.3.4",
-    "svelte": "^4.2.12"
+    "svelte": "^4.2.12",
+    "ws": "^8.18.1"
   },
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^3.0.2",
